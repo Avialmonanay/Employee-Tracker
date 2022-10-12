@@ -128,18 +128,106 @@ const db = mysql.createConnection(
 
     var addDepartment = () => {
         console.log("I Made It Here")
+
+        inquirer
+        .prompt([
+          {
+            type: 'list',
+            message: 'What would you like to do next?',
+            name: 'rtn',
+            choices: ["Add Another","Main Menu", "Exit"],
+          }
+        ])
+        .then((rtn) => {
+            userInput = rtn.rtn
+            if (userInput == "Return") {
+                mainMenu()
+            }
+            else if (userInput == "Add Another"){
+                addDepartment()
+            }
+            else {
+                exit()
+            }
+        })
     }
 
     var addRoll = () => {
         console.log("I Made It Here")
+
+        inquirer
+        .prompt([
+          {
+            type: 'list',
+            message: 'What would you like to do next?',
+            name: 'rtn',
+            choices: ["Add Another","Main Menu", "Exit"],
+          }
+        ])
+        .then((rtn) => {
+            userInput = rtn.rtn
+            if (userInput == "Return") {
+                mainMenu()
+            }
+            else if (userInput == "Add Another"){
+                addRoll()
+            }
+            else {
+                exit()
+            }
+        })
     }
 
     var addEmployee = () => {
         console.log("I Made It Here")
+
+        inquirer
+        .prompt([
+          {
+            type: 'list',
+            message: 'What would you like to do next?',
+            name: 'rtn',
+            choices: ["Add Another","Main Menu", "Exit"],
+          }
+        ])
+        .then((rtn) => {
+            userInput = rtn.rtn
+            if (userInput == "Return") {
+                mainMenu()
+            }
+            else if (userInput == "Add Another"){
+                addEmployee()
+            }
+            else {
+                exit()
+            }
+        })
     }
 
     var updateEmployee = () => {
         console.log("I Made It Here")
+
+        inquirer
+        .prompt([
+          {
+            type: 'list',
+            message: 'What would you like to do next?',
+            name: 'rtn',
+            choices: ["Update Another","Main Menu", "Exit"],
+          }
+        ])
+        .then((rtn) => {
+            userInput = rtn.rtn
+            if (userInput == "Return") {
+                mainMenu()
+            }
+            else if (userInput == "Update Another"){
+                updateEmployee()
+            }
+            else {
+                exit()
+            }
+        })
     }
 
     var exit = () => {
