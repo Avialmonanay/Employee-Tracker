@@ -129,6 +129,17 @@ const db = mysql.createConnection(
     var addDepartment = () => {
         console.log("I Made It Here")
 
+    inquirer
+    .prompt([
+        {
+        type: 'Input',
+        message: 'What is the Departments Name?',
+        name: 'dName',
+        }
+    ])
+    .then((departmentInfo) => {
+        var departmentName = departmentInfo.dName
+
         inquirer
         .prompt([
           {
@@ -140,7 +151,7 @@ const db = mysql.createConnection(
         ])
         .then((rtn) => {
             userInput = rtn.rtn
-            if (userInput == "Return") {
+            if (userInput == "Main Menu") {
                 mainMenu()
             }
             else if (userInput == "Add Another"){
@@ -150,10 +161,33 @@ const db = mysql.createConnection(
                 exit()
             }
         })
+    })
     }
-
     var addRoll = () => {
         console.log("I Made It Here")
+
+    inquirer
+    .prompt([
+        {
+        type: 'Input',
+        message: 'What is the Roles Name?',
+        name: 'rName',
+        },
+        {
+        type: 'Input',
+        message: 'What is the Roles Salary?',
+        name: 'rSalary',
+        },
+        {
+        type: 'Input',
+        message: 'What department ID is the roll apart of?',
+        name: 'rDepartment',
+        }
+    ])
+    .then((rollInfo) => {
+        var rollName = rollInfo.dName
+        var rollSalary = rollInfo.rSalary
+        var rollDepartment = rollInfo.rDepartment
 
         inquirer
         .prompt([
@@ -166,16 +200,17 @@ const db = mysql.createConnection(
         ])
         .then((rtn) => {
             userInput = rtn.rtn
-            if (userInput == "Return") {
+            if (userInput == "Main Menu") {
                 mainMenu()
             }
             else if (userInput == "Add Another"){
-                addRoll()
+                addDepartment()
             }
             else {
                 exit()
             }
         })
+    })
     }
 
     var addEmployee = () => {
@@ -183,24 +218,48 @@ const db = mysql.createConnection(
 
         inquirer
         .prompt([
-          {
-            type: 'list',
-            message: 'What would you like to do next?',
-            name: 'rtn',
-            choices: ["Add Another","Main Menu", "Exit"],
-          }
+            {
+            type: 'Input',
+            message: 'What is the employees first name?',
+            name: 'eFname',
+            },
+            {
+            type: 'Input',
+            message: 'What is the employees last name?',
+            name: 'eLname',
+            },
+            {
+            type: 'Input',
+            message: 'Who is the employees Manager??',
+            name: 'eManager',
+            }
         ])
-        .then((rtn) => {
-            userInput = rtn.rtn
-            if (userInput == "Return") {
-                mainMenu()
-            }
-            else if (userInput == "Add Another"){
-                addEmployee()
-            }
-            else {
-                exit()
-            }
+        .then((employeeInfo) => {
+            var firstName = employeeInfo.eFname
+            var lastName = employeeInfo.eLname
+            var manager = employeeInfo.eManager
+    
+            inquirer
+            .prompt([
+              {
+                type: 'list',
+                message: 'What would you like to do next?',
+                name: 'rtn',
+                choices: ["Add Another","Main Menu", "Exit"],
+              }
+            ])
+            .then((rtn) => {
+                userInput = rtn.rtn
+                if (userInput == "Main Menu") {
+                    mainMenu()
+                }
+                else if (userInput == "Add Another"){
+                    addDepartment()
+                }
+                else {
+                    exit()
+                }
+            })
         })
     }
 
