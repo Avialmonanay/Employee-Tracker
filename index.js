@@ -1,5 +1,6 @@
-const mysql = require('mysql2')
+const mysql = require('mysql2');
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 const db = mysql.createConnection(
     {
@@ -57,73 +58,28 @@ const db = mysql.createConnection(
 })
 }
 
-    var viewDepartments = () => {
-        console.log("I Made It Here")
-
-        inquirer
-        .prompt([
-          {
-            type: 'list',
-            message: 'Would you like to return to the menu or exit?',
-            name: 'rtn',
-            choices: ["Return", "Exit"],
-          }
-        ])
-        .then((rtn) => {
-            userInput = rtn.rtn
-            if (userInput == "Return") {
-                mainMenu()
-            }
-            else {
-                exit()
-            }
+    viewDepartments = () => {
+        db.query('SELECT * FROM departments', (err, results) => {
+            console.table(results)
+            mainMenu()
         })
     }
 
     var viewRoles = () => {
-        console.log("I Made It Here")
+        db.query('SELECT roles.id AS ID, roles.role_name AS TITLE, roles.role_salary AS SALARY, departments.department_name FROM roles JOIN departments ON  roles.department = departments.id;', function (err, results) {
+            console.table(results);
+            mainMenu()
+          });
 
-        inquirer
-        .prompt([
-          {
-            type: 'list',
-            message: 'Would you like to return to the menu or exit?',
-            name: 'rtn',
-            choices: ["Return", "Exit"],
-          }
-        ])
-        .then((rtn) => {
-            userInput = rtn.rtn
-            if (userInput == "Return") {
-                mainMenu()
-            }
-            else {
-                exit()
-            }
-        })
     }
 
     var viewEmployees = () => {
-        console.log("I Made It Here")
+        console.log("I MADE IT HERE")
+        db.query('SELECT employees.id AS ID, employees.first_name AS  FNAME, employees.last_name AS LNAME, roles.role_name AS TITLE, roles.role_salary AS SALARY, employees.manager AS MANAGER , departments.department_name AS DEPARTMENT FROM employees JOIN roles ON employees.role_ID = roles.id JOIN departments ON  roles.department = departments.id;', function (err, results) {
+            console.table(results);
+            mainMenu()
+          })
 
-        inquirer
-        .prompt([
-          {
-            type: 'list',
-            message: 'Would you like to return to the menu or exit?',
-            name: 'rtn',
-            choices: ["Return", "Exit"],
-          }
-        ])
-        .then((rtn) => {
-            userInput = rtn.rtn
-            if (userInput == "Return") {
-                mainMenu()
-            }
-            else {
-                exit()
-            }
-        })
     }
 
     var addDepartment = () => {
@@ -292,6 +248,7 @@ const db = mysql.createConnection(
     var exit = () => {
         console.log("I Made It Here")
     }
+
 
 
   mainMenu()
