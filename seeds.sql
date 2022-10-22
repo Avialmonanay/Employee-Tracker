@@ -12,14 +12,14 @@ VALUES ("Accounting", "50000", "3"),
        ("IT", "65000", "1");       
 
 INSERT INTO employees (first_name, last_name, manager,role_ID)
-VALUES ("Bob", "Ross", "CEO", 5),
-       ("Rexx", "Madsen", "Bob Ross", 2),
-       ("Mariah", "Carrie", "Bob Ross", 1),
-       ("Aliece", "Christensen", "Mariah Carrie", 1),
-       ("William", "Keith", "Rexx Madsen", 4),
-       ("Sub", "Tronics", "Bob Ross", 3),
-       ("Noble", "Finsand", "Bob Ross", 1),
-       ("Aliece", "Christensen", "Mariah Carrie", 3),
-       ("Liz", "Beth", "Rexx Madsen", 4),
-       ("Walter", "Rouse", "Rexx Madsen", 6);
+VALUES ("Bob", "Ross", null, 5),
+       ("Rexx", "Madsen", 1, 2),
+       ("Mariah", "Carrie", 1, 1),
+       ("Aliece", "Christensen", 3, 1),
+       ("William", "Keith", 2, 4),
+       ("Sub", "Tronics", 1, 3),
+       ("Noble", "Finsand", 1, 1),
+       ("Aliece", "Christensen", 3, 3),
+       ("Liz", "Beth", 2, 4),
+       ("Walter", "Rouse", 2, 6);
        

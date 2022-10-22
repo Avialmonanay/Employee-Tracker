@@ -21,7 +21,7 @@ const db = mysql.createConnection(
       type: 'list',
       message: 'What would you like to do?',
       name: 'mainMenu',
-      choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Departmnet", "Add A Roll", "Add An Employee","Update An Employee's Role","Exit" ],
+      choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Departmnet", "Add A Role", "Add An Employee","Update An Employee's Role","Exit" ],
     }
   ])
   .then((menuChoice) => {
@@ -41,7 +41,7 @@ const db = mysql.createConnection(
         addDepartment()
     }
     else if (userInput == "Add A Roll") {
-        addRoll()
+        addRole()
     }
     else if (userInput == "Add An Employee") {
         addEmployee()
@@ -75,7 +75,7 @@ const db = mysql.createConnection(
 
     var viewEmployees = () => {
         console.log("I MADE IT HERE")
-        db.query('SELECT employees.id AS ID, employees.first_name AS  FNAME, employees.last_name AS LNAME, roles.role_name AS TITLE, roles.role_salary AS SALARY, employees.manager AS MANAGER , departments.department_name AS DEPARTMENT FROM employees JOIN roles ON employees.role_ID = roles.id JOIN departments ON  roles.department = departments.id;', function (err, results) {
+        db.query('SELECT employees.id AS ID, employees.first_name AS  FIRST_NAME, employees.last_name AS LAST_NAME, roles.role_name AS TITLE, roles.role_salary AS SALARY, employees.manager AS MANAGER , departments.department_name AS DEPARTMENT FROM employees JOIN roles ON employees.role_ID = roles.id JOIN departments ON  roles.department = departments.id ORDER BY ID;', function (err, results) {
             console.table(results);
             mainMenu()
           })
@@ -94,32 +94,15 @@ const db = mysql.createConnection(
         }
     ])
     .then((departmentInfo) => {
+        var type = "department"
         var departmentName = departmentInfo.dName
-
-        inquirer
-        .prompt([
-          {
-            type: 'list',
-            message: 'What would you like to do next?',
-            name: 'rtn',
-            choices: ["Add Another","Main Menu", "Exit"],
-          }
-        ])
-        .then((rtn) => {
-            userInput = rtn.rtn
-            if (userInput == "Main Menu") {
-                mainMenu()
-            }
-            else if (userInput == "Add Another"){
-                addDepartment()
-            }
-            else {
-                exit()
-            }
+        db.query("INSERT INTO departments (department_name) VALUES (?);", departmentName, (err, results) => {
+        console.log("Added!");
+        whatNext(type)
         })
     })
     }
-    var addRoll = () => {
+    var addRole = () => {
         console.log("I Made It Here")
 
     inquirer
@@ -136,36 +119,23 @@ const db = mysql.createConnection(
         },
         {
         type: 'Input',
-        message: 'What department ID is the roll apart of?',
+        message: 'What department ID is the Role apart of?',
         name: 'rDepartment',
         }
     ])
-    .then((rollInfo) => {
-        var rollName = rollInfo.dName
-        var rollSalary = rollInfo.rSalary
-        var rollDepartment = rollInfo.rDepartment
-
-        inquirer
-        .prompt([
-          {
-            type: 'list',
-            message: 'What would you like to do next?',
-            name: 'rtn',
-            choices: ["Add Another","Main Menu", "Exit"],
-          }
-        ])
-        .then((rtn) => {
-            userInput = rtn.rtn
-            if (userInput == "Main Menu") {
-                mainMenu()
-            }
-            else if (userInput == "Add Another"){
-                addDepartment()
-            }
-            else {
-                exit()
-            }
+    .then((roleInfo) => {
+        var type = "role"
+        var roleName = roleInfo.rName
+        var roleSalary = roleInfo.rSalary
+        var roleDepartment = roleInfo.rDepartment
+        db.query("INSERT INTO roles (role_name, role_salary, department) VALUES (?,?,?)", [roleName, roleSalary, roleDepartment], (err,results) => {
+            if (err) {
+                console.log(err);
+              }
+        console.log("Added!")
+        whatNext(type)
         })
+
     })
     }
 
@@ -186,15 +156,165 @@ const db = mysql.createConnection(
             },
             {
             type: 'Input',
-            message: 'Who is the employees Manager??',
+            message: 'Who is the employees Manager?',
             name: 'eManager',
+            },
+            {
+            type: 'Input',
+            message: 'Enter the Role ID of the employee',
+            name: 'eRole',
             }
         ])
         .then((employeeInfo) => {
             var firstName = employeeInfo.eFname
             var lastName = employeeInfo.eLname
             var manager = employeeInfo.eManager
-    
+            var role = employeeInfo.eRole
+            var type = "employee"
+            db.query("INSERT INTO employees (first_name, last_name, manager,role_ID) VALUES (?,?,?,?);", [firstName, lastName, manager,role], (err,results) => {
+                if (err) {
+                    console.log(err);
+                  }
+            console.log("Added!")
+            whatNext(type)
+            })
+        })
+    }
+
+    var updateEmployee = () => {
+        console.log("I Made It Here")
+        
+            inquirer
+            .prompt([
+                {
+                  type: 'list',
+                  message: 'What would you like to do?',
+                  name: 'updateType',
+                  choices: ["First Name", "Last Name", "Manager", "Role"],
+                }
+              ])
+            .then((updateChoice) => {
+                console.log("Help Me")
+                var updateType = updateChoice.updateType
+                console.log(updateType)
+                if (updateType == "First Name"){
+                    inquirer
+                    .prompt([
+                        {
+                            type: 'input',
+                            message: 'What is the employees ID?',
+                            name: 'eID',
+                        },
+                        {
+                            type: 'input',
+                            message: 'What is the employees new First Name?',
+                            name: 'name',
+                        }
+                    ])
+                          .then((firstName)=>{
+                            var updateType = "employee"
+                            var eID = firstName.eID 
+                            var fName = firstName.name
+                            db.query('UPDATE employees SET first_name = ? WHERE id = ?', [fName, eID], (err, results) => {
+                                if (err) {
+                                    console.log(err);
+                                  }
+                            console.log("Added!")
+                            whatNextUpdate(updateType)   
+                            })
+                          })
+                    }
+                else if (updateType == "Last Name"){
+                    inquirer
+                    .prompt([
+                        {
+                            type: 'input',
+                            message: 'What is the employees ID?',
+                            name: 'eID',
+                        },
+                        {
+                            type: 'input',
+                            message: 'What is the employees new Last Name?',
+                            name: 'name',
+                        }
+                    ])
+                          .then((firstName)=>{
+                            var updateType = "employee"
+                            var eID = firstName.eID 
+                            var fName = firstName.name
+                            db.query('UPDATE employees SET first_name = ? WHERE id = ?', [fName, eID], (err, results) => {
+                                if (err) {
+                                    console.log(err);
+                                  }
+                            console.log("Added!")
+                            whatNextUpdate(updateType)   
+                            })
+                          })
+                }
+                else if (updateType == "Manager"){
+                    inquirer
+                    .prompt([
+                        {
+                            type: 'input',
+                            message: 'What is the employees ID?',
+                            name: 'eID',
+                        },
+                        {
+                            type: 'input',
+                            message: 'What is the employees new Manager?',
+                            name: 'name',
+                        }
+                    ])
+                          .then((firstName)=>{
+                            var updateType = "employee"
+                            var eID = firstName.eID 
+                            var fName = firstName.name
+                            db.query('UPDATE employees SET first_name = ? WHERE id = ?', [fName, eID], (err, results) => {
+                                if (err) {
+                                    console.log(err);
+                                  }
+                            console.log("Added!")
+                            whatNextUpdate(updateType)   
+                            })
+                          })
+                }
+                else if (updateType == "Role"){
+                    inquirer
+                    .prompt([
+                        {
+                            type: 'input',
+                            message: 'What is the employees ID?',
+                            name: 'eID',
+                        },
+                        {
+                            type: 'input',
+                            message: 'What is the employees new Role ID?',
+                            name: 'name',
+                        }
+                    ])
+                          .then((firstName)=>{
+                            var updateType = "employee"
+                            var eID = firstName.eID 
+                            var fName = firstName.name
+                            db.query('UPDATE employees SET first_name = ? WHERE id = ?', [fName, eID], (err, results) => {
+                                if (err) {
+                                    console.log(err);
+                                  }
+                            console.log("Added!")
+                            whatNextUpdate(updateType)   
+                            })
+                          })
+                }
+            })
+        // whatNextUpdate(updateType)
+    }
+
+    var exit = () => {
+        console.log("I Made It Here")
+    }
+
+    var whatNext = (type) => {
+
             inquirer
             .prompt([
               {
@@ -209,46 +329,49 @@ const db = mysql.createConnection(
                 if (userInput == "Main Menu") {
                     mainMenu()
                 }
-                else if (userInput == "Add Another"){
+                else if (userInput == "Add Another" && type == "department"){
                     addDepartment()
+                }
+                else if (userInput == "Add Another" && type == "role"){
+                    addRole()
+                }
+                else if (userInput == "Add Another" && type == "employee"){
+                    addEmployee()
                 }
                 else {
                     exit()
                 }
-            })
-        })
-    }
+            }) 
+        }
+    var whatNextUpdate = (type) => {
 
-    var updateEmployee = () => {
-        console.log("I Made It Here")
-
-        inquirer
-        .prompt([
-          {
-            type: 'list',
-            message: 'What would you like to do next?',
-            name: 'rtn',
-            choices: ["Update Another","Main Menu", "Exit"],
-          }
-        ])
-        .then((rtn) => {
-            userInput = rtn.rtn
-            if (userInput == "Return") {
-                mainMenu()
-            }
-            else if (userInput == "Update Another"){
-                updateEmployee()
-            }
-            else {
-                exit()
-            }
-        })
-    }
-
-    var exit = () => {
-        console.log("I Made It Here")
-    }
-
-
+            inquirer
+            .prompt([
+              {
+                type: 'list',
+                message: 'What would you like to do next?',
+                name: 'rtn',
+                choices: ["Update Another","Main Menu", "Exit"],
+              }
+            ])
+            .then((rtn) => {
+                userInput = rtn.rtn
+                if (userInput == "Main Menu") {
+                    mainMenu()
+                }
+                else if (userInput == "Update Another" && type == "department"){
+                    addDepartment()
+                }
+                else if (userInput == "Update Another" && type == "role"){
+                    addRole()
+                }
+                else if (userInput == "Udpate Another" && type == "employee"){
+                    addEmployee()
+                }
+                else {
+                    exit()
+                }
+            }) 
+    }    
 
   mainMenu()
