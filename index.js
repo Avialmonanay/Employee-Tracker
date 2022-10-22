@@ -40,7 +40,7 @@ const db = mysql.createConnection(
     else if (userInput == "Add A Departmnet") {
         addDepartment()
     }
-    else if (userInput == "Add A Roll") {
+    else if (userInput == "Add A Role") {
         addRole()
     }
     else if (userInput == "Add An Employee") {
