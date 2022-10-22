@@ -1,7 +1,9 @@
+//required packages
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 
+//Create Connection for the SQL Data Base
 const db = mysql.createConnection(
     {
       host: 'localhost',
@@ -12,16 +14,19 @@ const db = mysql.createConnection(
       database: 'employee_db'
     },
     console.log(`Connected to the employee_db database.`)
-  )
+)
 
-  var mainMenu = () =>{
+//Main menu of the application that provides options in the terminal application
+//upon user input it routes to the appropriate function where the user will be prompted
+//for information specific to the function
+mainMenu = () => {
   inquirer
   .prompt([
     {
       type: 'list',
       message: 'What would you like to do?',
       name: 'mainMenu',
-      choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Departmnet", "Add A Role", "Add An Employee","Update An Employee's Role","Exit" ],
+      choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Departmnet", "Add A Role", "Add An Employee","Update An Employee","Exit" ],
     }
   ])
   .then((menuChoice) => {
@@ -46,7 +51,7 @@ const db = mysql.createConnection(
     else if (userInput == "Add An Employee") {
         addEmployee()
     }
-    else if (userInput == "Update An Employee's Role") {
+    else if (userInput == "Update An Employee") {
         updateEmployee()
     }
     else if (userInput == "Exit") {
@@ -58,33 +63,39 @@ const db = mysql.createConnection(
 })
 }
 
-    viewDepartments = () => {
+//Calls to the database and pulls all departments for each department pull department 
+//name and ID. Displays departments in a formatted table.
+viewDepartments = () => {
         db.query('SELECT * FROM departments', (err, results) => {
             console.table(results)
             mainMenu()
         })
-    }
+}
 
-    var viewRoles = () => {
-        db.query('SELECT roles.id AS ID, roles.role_name AS TITLE, roles.role_salary AS SALARY, departments.department_name FROM roles JOIN departments ON  roles.department = departments.id;', function (err, results) {
+//Calls to the database and pulls all roles for each role pull ID Title Salary
+// and Department. Displays roles in a formatted table.
+viewRoles = () => {
+        db.query('SELECT roles.id AS ID, roles.role_name AS TITLE, roles.role_salary AS SALARY, departments.department_name AS DEPARTMENT FROM roles JOIN departments ON  roles.department = departments.id;', function (err, results) {
             console.table(results);
             mainMenu()
           });
 
-    }
+}
 
-    var viewEmployees = () => {
-        console.log("I MADE IT HERE")
+//Calls to the database and pulls all employees. for each employee display name, 
+//manager, salary, title, ID and Department. Displays employees in a formatted table.
+viewEmployees = () => {
         db.query('SELECT employees.id AS ID, employees.first_name AS  FIRST_NAME, employees.last_name AS LAST_NAME, roles.role_name AS TITLE, roles.role_salary AS SALARY, employees.manager AS MANAGER , departments.department_name AS DEPARTMENT FROM employees JOIN roles ON employees.role_ID = roles.id JOIN departments ON  roles.department = departments.id ORDER BY ID;', function (err, results) {
             console.table(results);
             mainMenu()
           })
 
-    }
+}
 
-    var addDepartment = () => {
-        console.log("I Made It Here")
-
+//prompts the user to enter the department name. Then uses a prepared statement to update
+//the db. Id auto increments.
+//user will then be prompted to return to main menu, add another, or exit
+addDepartment = () => {
     inquirer
     .prompt([
         {
@@ -97,14 +108,16 @@ const db = mysql.createConnection(
         var type = "department"
         var departmentName = departmentInfo.dName
         db.query("INSERT INTO departments (department_name) VALUES (?);", departmentName, (err, results) => {
-        console.log("Added!");
+        console.log("Department Added!");
         whatNext(type)
         })
     })
-    }
-    var addRole = () => {
-        console.log("I Made It Here")
+}
 
+//prompts the user to enter the roles name, salary, and deparment ID. Then uses 
+//a prepared statement to update the db. Id auto increments.
+//user will then be prompted to return to main menu, add another, or exit
+addRole = () => {
     inquirer
     .prompt([
         {
@@ -132,16 +145,17 @@ const db = mysql.createConnection(
             if (err) {
                 console.log(err);
               }
-        console.log("Added!")
+        console.log("Role Added!")
         whatNext(type)
         })
 
     })
-    }
+}
 
-    var addEmployee = () => {
-        console.log("I Made It Here")
-
+//prompts user to enter employees first name, last name, manager, and role ID Then uses 
+//a prepared statement to update the db. Id auto increments.
+//user will then be prompted to return to main menu, add another, or exit
+addEmployee = () => {
         inquirer
         .prompt([
             {
@@ -175,15 +189,18 @@ const db = mysql.createConnection(
                 if (err) {
                     console.log(err);
                   }
-            console.log("Added!")
+            console.log("Employee Added!")
             whatNext(type)
             })
         })
-    }
+}
 
-    var updateEmployee = () => {
-        console.log("I Made It Here")
-        
+//prompts the user to choose what area of the employee they are attempting to update
+// first name, last name, manager, or role). upon selection user is prompted to input
+//the employees id, and the new value for the field they selected.
+//Then uses a prepared statement to update the db. 
+//user will then be prompted to return to main menu, make another update, or exit
+updateEmployee = () => {        
             inquirer
             .prompt([
                 {
@@ -219,7 +236,7 @@ const db = mysql.createConnection(
                                 if (err) {
                                     console.log(err);
                                   }
-                            console.log("Added!")
+                            console.log("Update Successful!")
                             whatNextUpdate(updateType)   
                             })
                           })
@@ -273,7 +290,7 @@ const db = mysql.createConnection(
                                 if (err) {
                                     console.log(err);
                                   }
-                            console.log("Added!")
+                            console.log("Update Successful!")
                             whatNextUpdate(updateType)   
                             })
                           })
@@ -300,19 +317,23 @@ const db = mysql.createConnection(
                                 if (err) {
                                     console.log(err);
                                   }
-                            console.log("Added!")
+                            console.log("Update Successful!!")
                             whatNextUpdate(updateType)   
                             })
                           })
                 }
             })
-    }
+}
 
-    var exit = () => {
+//exit function provides a message to the user saying bye and stops the file
+exit = () => {
         console.log("Bye!")
-    }
+        return
+}
 
-    var whatNext = (type) => {
+//user prompts after an add action is taken. Allows them to select the appropriate 
+//next action, to continue navigating the application.
+whatNext = (type) => {
 
             inquirer
             .prompt([
@@ -341,8 +362,11 @@ const db = mysql.createConnection(
                     exit()
                 }
             }) 
-        }
-    var whatNextUpdate = (type) => {
+}
+
+//user prompts after an update action is taken. Allows them to select the appropriate 
+//next action, to continue navigating the application.
+whatNextUpdate = (type) => {
 
             inquirer
             .prompt([
@@ -371,6 +395,8 @@ const db = mysql.createConnection(
                     exit()
                 }
             }) 
-    }    
+}    
 
+
+//start with the main menu function.
   mainMenu()
