@@ -242,7 +242,7 @@ const db = mysql.createConnection(
                             var updateType = "employee"
                             var eID = firstName.eID 
                             var fName = firstName.name
-                            db.query('UPDATE employees SET first_name = ? WHERE id = ?', [fName, eID], (err, results) => {
+                            db.query('UPDATE employees SET last_name = ? WHERE id = ?', [fName, eID], (err, results) => {
                                 if (err) {
                                     console.log(err);
                                   }
@@ -269,7 +269,7 @@ const db = mysql.createConnection(
                             var updateType = "employee"
                             var eID = firstName.eID 
                             var fName = firstName.name
-                            db.query('UPDATE employees SET first_name = ? WHERE id = ?', [fName, eID], (err, results) => {
+                            db.query('UPDATE employees SET manager = ? WHERE id = ?', [fName, eID], (err, results) => {
                                 if (err) {
                                     console.log(err);
                                   }
@@ -296,7 +296,7 @@ const db = mysql.createConnection(
                             var updateType = "employee"
                             var eID = firstName.eID 
                             var fName = firstName.name
-                            db.query('UPDATE employees SET first_name = ? WHERE id = ?', [fName, eID], (err, results) => {
+                            db.query('UPDATE employees SET role_id = ? WHERE id = ?', [fName, eID], (err, results) => {
                                 if (err) {
                                     console.log(err);
                                   }
@@ -306,11 +306,10 @@ const db = mysql.createConnection(
                           })
                 }
             })
-        // whatNextUpdate(updateType)
     }
 
     var exit = () => {
-        console.log("I Made It Here")
+        console.log("Bye!")
     }
 
     var whatNext = (type) => {
