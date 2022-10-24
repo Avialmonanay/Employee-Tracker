@@ -1,17 +1,18 @@
 //required packages
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const cTable = require('console.table');
+require('console.table');
+require('dotenv').config()
 
 //Create Connection for the SQL Data Base
 const db = mysql.createConnection(
     {
       host: 'localhost',
       // MySQL username,
-      user: 'root',
+      user: process.env.DB_USER,
       // MySQL password
-      password: 'bob ross paint night',
-      database: 'employee_db'
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME
     },
     console.log(`Connected to the employee_db database.`)
 )
@@ -379,6 +380,7 @@ whatNextUpdate = (type) => {
             ])
             .then((rtn) => {
                 userInput = rtn.rtn
+                console.log(type)
                 if (userInput == "Main Menu") {
                     mainMenu()
                 }
@@ -388,8 +390,8 @@ whatNextUpdate = (type) => {
                 else if (userInput == "Update Another" && type == "role"){
                     addRole()
                 }
-                else if (userInput == "Udpate Another" && type == "employee"){
-                    addEmployee()
+                else if (userInput == "Update Another" && type == "employee"){
+                    updateEmployee()
                 }
                 else {
                     exit()
