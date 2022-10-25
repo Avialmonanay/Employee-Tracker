@@ -17,7 +17,11 @@ This is a terminal based application that uses prepared statements to pull, upda
 This application has 4 npm package dependencies - console.table, dotenv, inquirer, and mysql2. All dependencies have been added to the package.json file and can be installed by running the command "npm -i". there is a demo of the install in the video linked on this readme below. 
 
 ## Usage
-A user will access the application by running the command "node index.js" once the application has started the user will be imediately prompted to select an option to view a table, update a table, or add to a table. Upon user selection of a view table option a formatted table is returned to the terminal displaying all information from the table. upon selecting a update or add option a new prompt will appear on screen requesting specific information related to the action they are attempting to make. Upon completion ot user input in the add or update actions the users will be prompted to add or update another, return to the main menu, or exit. This allows users to quickly make multiple updates or return to the main menu to continue taking actions within the application.
+A user will access the application by running the command "node index.js" once the application has started the user will be imediately prompted to select an option to view a table, update a table, or add to a table. 
+Upon user selection of a view table option a formatted table is returned to the terminal displaying all information from the table. 
+upon selecting a update or add option a new prompt will appear on screen requesting specific information related to the action they are attempting to make. 
+Upon completion ot user input in the add or update actions the users will be prompted to add or update another, return to the main menu, or exit. This allows users to quickly make multiple updates or return to the main menu to continue taking actions within the application.
+
 ![Capture](https://user-images.githubusercontent.com/108016215/197650322-ebf3e98d-e248-4258-a1b3-f40253418c26.PNG)
 
 ## Video Demo
