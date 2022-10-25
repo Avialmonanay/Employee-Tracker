@@ -24,6 +24,11 @@ Upon completion ot user input in the add or update actions the users will be pro
 
 ![Capture](https://user-images.githubusercontent.com/108016215/197650322-ebf3e98d-e248-4258-a1b3-f40253418c26.PNG)
 
+## SQL File Structure
+
+![file_structure](https://user-images.githubusercontent.com/108016215/197654655-4fc76a1a-e050-47f6-b072-54e1374bc94e.PNG)
+
+
 ## Video Demo
 https://drive.google.com/file/d/1ltovEAjKJpPvIib7eejNK9PwfwTCGWdE/view
 
